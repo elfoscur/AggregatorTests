@@ -48,7 +48,7 @@ object MaxAggregatorTest2 {
       .toDF("date", "key", "timestamp").as[MyRow1]
 
     df.show(false)
-    val res = df.groupByKey(_.key).agg(customAggregator.name("MaxTimestamp"))
+    val res = df.groupByKey(_.key).agg(customAggregator.name("MaxTimestamp")).withColumnRenamed("value","key")
     res.printSchema()
     res.show(false)
 
