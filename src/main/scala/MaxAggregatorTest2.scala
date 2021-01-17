@@ -6,7 +6,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import java.text.SimpleDateFormat
 
-case class MyRow1(date: String, key: String, timeStamp: String)
+case class MyRow1(key: String, timeStamp: String)
 
 
 object MaxAggregatorTest2 {
@@ -40,12 +40,12 @@ object MaxAggregatorTest2 {
 
     import sparkSession.implicits._
 
-    val df = Seq(("20200131", "20200131,1", "2018-01-10T13:30:34.45Z"),
-      ("20200131", "20200131,1", "2018-02-10T13:30:34.45Z"),
-      ("20200131", "20200131,1", "2018-03-10T13:30:34.45Z"),
-      ("20200131", "20200131,2", "2018-01-10T13:30:34.45Z"),
-      ("20200228", "20200228,1", "2018-11-10T13:30:34.45Z"))
-      .toDF("date", "key", "timestamp").as[MyRow1]
+    val df = Seq(( "20200131,1", "2018-01-10T13:30:34.45Z"),
+      ("20200131,1", "2018-02-10T13:30:34.45Z"),
+      ("20200131,1", "2018-03-10T13:30:34.45Z"),
+      ("20200131,2", "2018-01-10T13:30:34.45Z"),
+      ("20200228,1", "2018-11-10T13:30:34.45Z"))
+      .toDF("key", "timestamp").as[MyRow1]
 
     df.show(false)
     val res = df.groupByKey(_.key).agg(customAggregator.name("MaxTimestamp")).withColumnRenamed("value","key")
