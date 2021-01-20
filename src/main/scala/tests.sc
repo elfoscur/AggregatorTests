@@ -1,21 +1,35 @@
-import java.text.SimpleDateFormat
+import org.apache.spark.sql.Column
 
-val timestampFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-val startDate = "2018-04-10T13:30:34.45Z";
-val  start = new SimpleDateFormat(timestampFormat).parse(startDate);
+import scala.annotation.tailrec
 
-println("Data convertita: "+start.toString)
+val a = Array("pippo","pluto","minnie").toList
 
+import org.apache.spark.sql.functions._
 
-
-def maxTimeStamp(t1: String, t2: String): String = {
-
-  val t1d = new SimpleDateFormat(timestampFormat).parse(t1)
-  val t2d = new SimpleDateFormat(timestampFormat).parse(t2)
-  if (t1d.after(t2d)) t1 else t2
-
+def dup(a: List[String]): List[Column] = {
+  def dupAccum(aa: List[String], acc: List[Column]): List[Column] = {
+    aa match  {
+      case Nil => acc
+      case x :: tail => {
+                          val n = acc ::: List(lit("x=")) ::: List(col(x))
+                          dupAccum(tail, n)
+                        }
+    }
+  }
+  dupAccum(a,Nil)
 }
 
+dup(a)
 
 
-println(maxTimeStamp("2020-04-10T13:30:34.45Z","2018-02-10T13:30:34.45Z"))
+
+def sum2(ints: List[Int]): Int = {
+  @tailrec
+  def sumAccumulator(ints: List[Int], accum: Int): Int = {
+    ints match {
+      case Nil => accum
+      case x :: tail => sumAccumulator(tail, accum + x)
+    }
+  }
+  sumAccumulator(ints, 0)
+}
