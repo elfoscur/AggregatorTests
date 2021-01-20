@@ -11,7 +11,7 @@ def dup(a: List[String]): List[Column] = {
     aa match  {
       case Nil => acc
       case x :: tail => {
-                          val n = acc ::: List(lit("x=")) ::: List(col(x))
+                          val n = acc ::: List(lit(x+"=")) ::: List(col(x))
                           dupAccum(tail, n)
                         }
     }
